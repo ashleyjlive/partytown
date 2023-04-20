@@ -9,7 +9,7 @@ import { onMessageFromWebWorker } from '../sandbox/on-messenge-from-worker';
 import { readMainInterfaces, readMainPlatform } from '../sandbox/read-main-platform';
 
 const createMessengerAtomics: Messenger = async (receiveMessage) => {
-  const size = 1024 * 1024 * 1024;
+  const size = 1024 * 1024 * 10;
   const sharedDataBuffer = new SharedArrayBuffer(size);
   const sharedData = new Int32Array(sharedDataBuffer);
 
