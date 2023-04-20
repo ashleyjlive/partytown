@@ -36,8 +36,10 @@ export interface PartytownConfig {
     // (undocumented)
     mainWindowAccessors?: string[];
     resolveUrl?(url: URL, location: Location, type: ResolveUrlType): URL | undefined | null;
+    sandboxParent?: string;
     // (undocumented)
     set?: SetHook;
+    sharedArrayBufferSize?: number;
     swPath?: string;
 }
 
