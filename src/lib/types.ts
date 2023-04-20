@@ -489,7 +489,11 @@ export interface PartytownConfig {
    * Path to the service worker file. Defaults to `partytown-sw.js`.
    */
   swPath?: string;
-
+  /**
+   * The size of the shared array buffer in bytes when atomics is used. Default is 10mb.
+   * 
+   * It must not exceed 1073741824 bytes as this will result in out-of-memory errors.
+   */
   sharedArrayBufferSize?: number;
 }
 
