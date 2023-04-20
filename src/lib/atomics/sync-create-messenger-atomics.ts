@@ -7,10 +7,11 @@ import {
 } from '../types';
 import { onMessageFromWebWorker } from '../sandbox/on-messenge-from-worker';
 import { readMainInterfaces, readMainPlatform } from '../sandbox/read-main-platform';
+import { config } from '../sandbox/main-globals';
 
 const createMessengerAtomics: Messenger = async (receiveMessage) => {
   const size = 1024 * 1024 * 10;
-  const sharedDataBuffer = new SharedArrayBuffer(size);
+  const sharedDataBuffer = new SharedArrayBuffer(config.sharedArrayBufferSize || size);
   const sharedData = new Int32Array(sharedDataBuffer);
 
   return (worker: PartytownWebWorker, msg: MessageFromWorkerToSandbox) => {

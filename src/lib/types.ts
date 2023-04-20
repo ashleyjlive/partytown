@@ -489,6 +489,8 @@ export interface PartytownConfig {
    * Path to the service worker file. Defaults to `partytown-sw.js`.
    */
   swPath?: string;
+
+  sharedArrayBufferSize?: number;
 }
 
 /**
