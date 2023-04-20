@@ -11,7 +11,7 @@ Partytown does not require a config for it to work, however a config can be set 
 | `lib`        | Path where the Partytown library can be found your server. Note that the path must both start and end with a `/` character, and the files must be hosted from the same origin as the webpage. Default is `/~partytown/`   |
 | `loadScriptsOnMainThread` | An array of strings used to filter out which script are executed via Partytown and the main thread. An example is as follows: `loadScriptsOnMainThread: ["https://test.com/analytics.js", "inline-script-id"]`.|
 | `resolveUrl` | Hook that is called to resolve URLs which can be used to modify URLs. The hook uses the API: `resolveUrl(url: URL, location: URL, method: string)`. See the [Proxying Requests](/proxying-requests) for more information. |
-| `sharedArrayBufferSize` | The size of the shared array buffer in bytes when atomics is used. It must not exceed 1073741824 bytes as this will result in out-of-memory errors. Default is 10mb. |
+| `sharedArrayBufferSize` | The size of the shared array buffer in bytes when atomics is used. As per the [web docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer/SharedArrayBuffer#sect3), it must not exceed 1073741824 bytes. The default is 10mb. |
 
 ## Vanilla Config
 

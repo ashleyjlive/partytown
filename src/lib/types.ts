@@ -490,7 +490,7 @@ export interface PartytownConfig {
    */
   swPath?: string;
   /**
-   * The size of the shared array buffer in bytes when atomics is used. Default is 10mb.
+   * The size of the shared array buffer in bytes when atomics is used. The default is 10mb.
    * 
    * It must not exceed 1073741824 bytes as this will result in out-of-memory errors.
    */
