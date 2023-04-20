@@ -107,7 +107,7 @@
     "useTabs": false,
     "quoteProps": "consistent"
   },
-  "author": "Ashley Bengtson & Builder.io Team",
+  "author": "Ashley Bengtson, Nathan Beddoe & Builder.io Team",
   "homepage": "https://github.com/BuilderIO/partytown#readme",
   "repository": {
     "type": "git",
