@@ -9,7 +9,11 @@ export class FeaturePolicy {
   }
 
   public allowedFeatures() {
-    return getter(this._instance, ['featurePolicy', 'allowedFeatures']);
+    return callMethod(
+      this._instance,
+      ['featurePolicy', 'allowedFeatures'],
+      [],
+      CallType.Blocking);
   }
 
   public allowsFeature(feature: string) {
@@ -22,7 +26,11 @@ export class FeaturePolicy {
   }
 
   public features() {
-    return getter(this._instance, ['featurePolicy', 'features']);
+    return callMethod(
+      this._instance,
+      ['featurePolicy', 'features'],
+      [],
+      CallType.Blocking);
   }
 
   public getAllowlistForFeature(feature: string) {
