@@ -20,6 +20,7 @@ import { getInstanceStateValue } from './worker-state';
 import { getPartytownScript } from './worker-exec';
 import { isScriptJsType } from './worker-script';
 import { warnCrossOrgin } from '../log';
+import { FeaturePolicy } from './worker-feature-policy';
 
 export const patchDocument = (
   WorkerDocument: any,
@@ -35,8 +36,8 @@ export const patchDocument = (
 
     featurePolicy: {
       get() {
-        return undefined;
-      }
+        return new FeaturePolicy(this);
+      },
     },
 
     cookie: {
