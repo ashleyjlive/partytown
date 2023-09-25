@@ -1,6 +1,6 @@
 {
   "name": "@ashleyjlive/partytown",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "Relocate resource intensive third-party scripts off of the main thread and into a web worker.",
   "license": "MIT",
   "main": "index.cjs",

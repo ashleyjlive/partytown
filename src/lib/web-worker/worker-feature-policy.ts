@@ -9,26 +9,26 @@ export class FeaturePolicy {
   }
 
   public allowedFeatures() {
-    return getter(this._instance, ['document', 'featurePolicy', 'allowedFeatures']);
+    return getter(this._instance, ['featurePolicy', 'allowedFeatures']);
   }
 
   public allowsFeature(feature: string) {
     return callMethod(
       this._instance,
-      ['document', 'featurePolicy', 'allowsFeature'],
+      ['featurePolicy', 'allowsFeature'],
       [feature],
       CallType.Blocking
     );
   }
 
   public features() {
-    return getter(this._instance, ['document', 'featurePolicy', 'features']);
+    return getter(this._instance, ['featurePolicy', 'features']);
   }
 
   public getAllowlistForFeature(feature: string) {
     return callMethod(
       this._instance,
-      ['document', 'featurePolicy', 'getAllowlistForFeature'],
+      ['featurePolicy', 'getAllowlistForFeature'],
       [feature],
       CallType.Blocking
     );
