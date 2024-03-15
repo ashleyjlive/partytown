@@ -3,7 +3,6 @@ import type { EventHandler, WebWorkerEnvironment } from '../types';
 import { logWorker } from '../log';
 import { resolveUrl } from './worker-exec';
 import { webWorkerCtx } from './worker-constants';
-import { callMethod } from './worker-proxy';
 
 export const createImageConstructor = (env: WebWorkerEnvironment) =>
   class HTMLImageElement {
