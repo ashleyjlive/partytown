@@ -18,46 +18,50 @@ const receiveMessageFromSandboxToWorker = (ev: MessageEvent<MessageFromSandboxTo
   const msgValue: any = msg[1];
 
   if (webWorkerCtx.$isInitialized$) {
-    if (msgType === WorkerMessageType.InitializeNextScript) {
-      // message from main to web worker that it should initialize the next script
-      initNextScriptsInWebWorker(msgValue);
-    } else if (msgType === WorkerMessageType.RefHandlerCallback) {
-      // main has called a worker ref handler
-      callWorkerRefHandler(msgValue);
-    } else if (msgType === WorkerMessageType.ForwardMainTrigger) {
-      workerForwardedTriggerHandle(msgValue as ForwardMainTriggerData);
-    } else if (msgType === WorkerMessageType.InitializeEnvironment) {
-      createEnvironment(msgValue);
-    } else if (msgType === WorkerMessageType.InitializedScripts) {
-      if (debug && environments[msgValue].$isInitialized$ !== 1) {
-        const winId = msgValue;
-        const env = environments[winId];
-        const winType = env.$winId$ === env.$parentWinId$ ? 'top' : 'iframe';
-        logWorker(`Initialized ${winType} window ${normalizedWinId(winId)} environment 🎉`, winId);
-      }
+    switch (msgType) {
+      case WorkerMessageType.InitializeNextScript:
+        initNextScriptsInWebWorker(msgValue);
+        break;
+      case WorkerMessageType.RefHandlerCallback:
+        callWorkerRefHandler(msgValue);
+        break;
+      case WorkerMessageType.ForwardMainTrigger:
+        workerForwardedTriggerHandle(msgValue as ForwardMainTriggerData);
+        break;
+      case WorkerMessageType.InitializeEnvironment:
+        createEnvironment(msgValue);
+        break;
+      case WorkerMessageType.InitializedScripts:
+        isInitialized(msgValue);
+        break;
+      case WorkerMessageType.DocumentVisibilityState:
+        environments[msgValue].$visibilityState$ = msg[2];
+        break;
+      case WorkerMessageType.LocationUpdate:
+        locationChanged(msgValue);
+        break;
+      case WorkerMessageType.CustomElementCallback:
+        callCustomElementCallback(...msg);
+        break;
+      case WorkerMessageType.MainDataResponseToWorker:
+        // received initial main data
+        // initialize the web worker with the received the main data
+        initWebWorker(msgValue);
 
-      environments[msgValue].$isInitialized$ = 1;
-      environments[msgValue].$isLoading$ = 0;
-    } else if (msgType === WorkerMessageType.DocumentVisibilityState) {
-      environments[msgValue].$visibilityState$ = msg[2];
-    } else if (msgType === WorkerMessageType.LocationUpdate) {
-      const $winId$ = msgValue.$winId$;
-      const env = environments[$winId$];
-
-      env.$location$.href = msgValue.url;
-
-      forwardLocationChange(msgValue.$winId$, env, msgValue);
-    } else if (msgType === WorkerMessageType.CustomElementCallback) {
-      callCustomElementCallback(...msg);
+        // request from main that the worker needs the interfaces
+        webWorkerCtx.$postMessage$([WorkerMessageType.MainInterfacesRequestFromWorker]);
+        break;
+      case WorkerMessageType.MainInterfacesResponseToWorker:
+        mainInterfaceResponse(msgValue)
+        break;
+      default:
+        // the web worker hasn't finished initializing yet, let's store
+        // this event so it can be re-ran after initialization
+        queuedEvents.push(ev);
     }
-  } else if (msgType === WorkerMessageType.MainDataResponseToWorker) {
-    // received initial main data
-    // initialize the web worker with the received the main data
-    initWebWorker(msgValue);
+  };
 
-    // request from main that the worker needs the interfaces
-    webWorkerCtx.$postMessage$([WorkerMessageType.MainInterfacesRequestFromWorker]);
-  } else if (msgType === WorkerMessageType.MainInterfacesResponseToWorker) {
+  function mainInterfaceResponse(msgValue: any) {
     // received more main thread interfaces, append them to the array
     webWorkerCtx.$interfaces$ = [...webWorkerCtx.$interfaces$, ...msgValue];
     webWorkerCtx.$isInitialized$ = 1;
@@ -74,13 +78,30 @@ const receiveMessageFromSandboxToWorker = (ev: MessageEvent<MessageFromSandboxTo
     }
     [...queuedEvents].map(receiveMessageFromSandboxToWorker);
     queuedEvents.length = 0;
-  } else {
-    // the web worker hasn't finished initializing yet, let's store
-    // this event so it can be re-ran after initialization
-    queuedEvents.push(ev);
   }
-};
 
-self.onmessage = receiveMessageFromSandboxToWorker;
+  function isInitialized(msgValue: any) {
+    if (debug && environments[msgValue].$isInitialized$ !== 1) {
+      const winId = msgValue;
+      const env = environments[winId];
+      const winType = env.$winId$ === env.$parentWinId$ ? 'top' : 'iframe';
+      logWorker(`Initialized ${winType} window ${normalizedWinId(winId)} environment 🎉`, winId);
+    }
 
-postMessage([WorkerMessageType.MainDataRequestFromWorker]);
+    environments[msgValue].$isInitialized$ = 1;
+    environments[msgValue].$isLoading$ = 0;
+  }
+
+  function locationChanged(msgValue: any) {
+    const $winId$ = msgValue.$winId$;
+    const env = environments[$winId$];
+
+    env.$location$.href = msgValue.url;
+
+    forwardLocationChange(msgValue.$winId$, env, msgValue);
+  }
+
+  self.onmessage = receiveMessageFromSandboxToWorker;
+
+  postMessage([WorkerMessageType.MainDataRequestFromWorker]);
+}

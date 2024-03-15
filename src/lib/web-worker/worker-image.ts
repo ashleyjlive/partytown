@@ -10,12 +10,14 @@ export const createImageConstructor = (env: WebWorkerEnvironment) =>
     l: EventHandler[];
     e: EventHandler[];
     style: Record<string, string>;
+    attributes: Record<string, string>;
 
     constructor() {
       this.s = '';
       this.l = [];
       this.e = [];
       this.style = {};
+      this.attributes = {};
     }
 
     get src() {
@@ -51,6 +53,14 @@ export const createImageConstructor = (env: WebWorkerEnvironment) =>
       if (eventName === 'error') {
         this.e.push(cb);
       }
+    }
+
+    setAttribute(attributeName: string, value: string) {
+      this.attributes[attributeName] = value;
+    }
+
+    getAttribute(attributeName: string) {
+      return this.attributes[attributeName];
     }
 
     get onload() {
