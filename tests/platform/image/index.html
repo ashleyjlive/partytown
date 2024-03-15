@@ -222,6 +222,30 @@
           })();
         </script>
       </li>
+
+      <li>
+        <strong>&lt;img&gt; setAttribute</strong>
+        <code id="testImgSrc"></code>
+        <script type="text/partytown">
+          (function () {
+            const image = new Image();
+            image.setAttribute('testKey', 'testValue');
+          })();
+        </script>
+      </li>
+
+      <li>
+        <strong>&lt;img&gt; getAttribute</strong>
+        <code id="testImgSrc"></code>
+        <script type="text/partytown">
+          (function () {
+            const image = new Image();
+            image.setAttribute('testKey', 'testValue');
+            image.getAttribute('testKey');
+            console.log(image.getAttribute('testKey'))
+          })();
+        </script>
+      </li>
     </ul>
 
     <hr />

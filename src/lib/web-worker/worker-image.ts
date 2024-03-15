@@ -3,6 +3,7 @@ import type { EventHandler, WebWorkerEnvironment } from '../types';
 import { logWorker } from '../log';
 import { resolveUrl } from './worker-exec';
 import { webWorkerCtx } from './worker-constants';
+import { callMethod } from './worker-proxy';
 
 export const createImageConstructor = (env: WebWorkerEnvironment) =>
   class HTMLImageElement {
@@ -10,12 +11,14 @@ export const createImageConstructor = (env: WebWorkerEnvironment) =>
     l: EventHandler[];
     e: EventHandler[];
     style: Record<string, string>;
+    attributes: Record<string, string>;
 
     constructor() {
       this.s = '';
       this.l = [];
       this.e = [];
       this.style = {};
+      this.attributes = {};
     }
 
     get src() {
@@ -51,6 +54,14 @@ export const createImageConstructor = (env: WebWorkerEnvironment) =>
       if (eventName === 'error') {
         this.e.push(cb);
       }
+    }
+
+    setAttribute(attributeName: string, value: string) {
+      this.attributes[attributeName] = value;
+    }
+
+    getAttribute(attributeName: string) {
+      return this.attributes[attributeName];
     }
 
     get onload() {
